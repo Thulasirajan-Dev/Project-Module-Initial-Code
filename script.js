@@ -3,17 +3,59 @@
 //  script.js  (updated v4)
 // ============================================================
 
-const DB = FIREBASE_URL.replace(/\/$/,"");
+const API = "http://127.0.0.1:9000";
 
-// ── Firebase helpers ──────────────────────────────────────────
+// GET
 async function fbGet(path){
-  try{const r=await fetch(`${DB}/${path}.json`);return r.ok?r.json():null;}catch(e){return null;}
+  try{
+    path = path.replace(".json","");
+
+    const r = await fetch(`${API}/${path}`);
+
+    return r.ok ? await r.json() : null;
+
+  }catch(e){
+    console.error(e);
+    return null;
+  }
 }
+
+// SAVE
 async function fbSet(path,data){
-  try{const r=await fetch(`${DB}/${path}.json`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});return r.ok;}catch(e){return false;}
+  try{
+    path = path.replace(".json","");
+
+    const r = await fetch(`${API}/${path}`,{
+      method:"PUT",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify(data)
+    });
+
+    return r.ok;
+
+  }catch(e){
+    console.error(e);
+    return false;
+  }
 }
+
+// DELETE
 async function fbDelete(path){
-  try{const r=await fetch(`${DB}/${path}.json`,{method:"DELETE"});return r.ok;}catch(e){return false;}
+  try{
+    path = path.replace(".json","");
+
+    const r = await fetch(`${API}/${path}`,{
+      method:"DELETE"
+    });
+
+    return r.ok;
+
+  }catch(e){
+    console.error(e);
+    return false;
+  }
 }
 
 // ── Utility helpers ───────────────────────────────────────────
